@@ -217,7 +217,8 @@ const Contact: React.FC<ContactProps> = ({ profile }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/contact', {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${baseUrl}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

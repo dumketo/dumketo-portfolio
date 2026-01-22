@@ -1,7 +1,8 @@
 import { PortfolioData } from '@/types';
 
 export async function getPortfolioData() {
-  const res = await fetch('http://localhost:8000/api/portfolio', {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  const res = await fetch(`${baseUrl}/api/portfolio`, {
     cache: 'no-store',
   });
 
