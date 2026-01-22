@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Skill, Profile } from '../types';
-import { SKILLS } from '../constants';
+
 
 const TECH_STACK = [
   { name: "WordPress", slug: "wordpress", color: "white" },
@@ -34,7 +34,7 @@ interface SkillsProps {
   profile?: Profile | null;
 }
 
-const Skills: React.FC<SkillsProps> = ({ skills = SKILLS, profile }) => {
+const Skills: React.FC<SkillsProps> = ({ skills, profile }) => {
   // Duplicate the array to ensure seamless infinite scroll
   const MARQUEE_ITEMS = [...TECH_STACK, ...TECH_STACK, ...TECH_STACK];
 

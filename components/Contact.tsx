@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle, Loader2, AlertCircle, Mail, Phone, MapPin, Copy, Check, Github, Linkedin, Twitter, Facebook } from 'lucide-react';
 import { Profile } from '../types';
-import { PERSONAL_INFO } from '../constants';
+
 import Turnstile from 'react-turnstile';
 
 const ContactItem: React.FC<{ 
@@ -193,7 +193,7 @@ interface ContactProps {
   profile?: Profile;
 }
 
-const Contact: React.FC<ContactProps> = ({ profile = PERSONAL_INFO }) => {
+const Contact: React.FC<ContactProps> = ({ profile }) => {
   const [formState, setFormState] = useState({
     name: '',
     email: '',

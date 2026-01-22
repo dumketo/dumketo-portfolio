@@ -3,13 +3,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, Calendar, MapPin } from 'lucide-react';
 import { ExperienceItem } from '../types';
-import { EXPERIENCE } from '../constants';
+
 
 interface ExperienceProps {
   experiences?: ExperienceItem[];
 }
 
-const Experience: React.FC<ExperienceProps> = ({ experiences = EXPERIENCE }) => {
+const Experience: React.FC<ExperienceProps> = ({ experiences }) => {
   return (
     <section id="experience" className="py-20 bg-slate-900">
       <div className="container mx-auto px-6">

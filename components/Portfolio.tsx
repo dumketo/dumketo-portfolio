@@ -3,13 +3,13 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import { Project } from '../types';
-import { PROJECTS } from '../constants';
+
 
 interface PortfolioProps {
   projects?: Project[];
 }
 
-const Portfolio: React.FC<PortfolioProps> = ({ projects = PROJECTS }) => {
+const Portfolio: React.FC<PortfolioProps> = ({ projects }) => {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState("All");
 

@@ -4,13 +4,14 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Download, Mail, MapPin } from 'lucide-react';
 import { Profile } from '../types';
 
-import { PERSONAL_INFO } from '../constants';
+
 
 interface HeroProps {
   profile?: Profile;
 }
 
-const Hero: React.FC<HeroProps> = ({ profile = PERSONAL_INFO }) => {
+const Hero: React.FC<HeroProps> = ({ profile }) => {
+  if (!profile) return null;
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
       {/* Background Gradient Blob */}

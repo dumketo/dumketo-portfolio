@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { PERSONAL_INFO } from '../constants';
+
 
 // Simple WhatsApp Icon SVG
 const WhatsAppIcon = () => (
@@ -14,7 +14,7 @@ interface WhatsAppFloatProps {
   whatsapp?: string;
 }
 
-const WhatsAppFloat: React.FC<WhatsAppFloatProps> = ({ whatsapp = PERSONAL_INFO.whatsapp }) => {
+const WhatsAppFloat: React.FC<WhatsAppFloatProps> = ({ whatsapp }) => {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       <motion.a
