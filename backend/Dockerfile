@@ -1,43 +1,50 @@
 FROM php:8.2-cli-alpine
 
-# 1. Install System Dependencies (Alpine version)
-# 'build-base' and 'autoconf' are needed to compile the mongodb extension
+# Set working directory first
+WORKDIR /app
+
+# 1. Install Runtime Dependencies (Lightweight)
 RUN apk add --no-cache \
     git \
     curl \
     unzip \
+    openssl
+
+# 2. Install Node.js & NPM (Separate layer)
+RUN apk add --no-cache \
     nodejs \
-    npm \
+    npm
+
+# 3. Install Build Tools (Heavy)
+# Required for compiling PECL extensions
+RUN apk add --no-cache \
     autoconf \
     g++ \
     make \
     linux-headers \
     openssl-dev
 
-# 2. Install MongoDB Extension
+# 4. Install MongoDB Extension
 RUN pecl install mongodb && docker-php-ext-enable mongodb
 
-# 3. Install Composer
+# 5. Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /app
-
-# 4. Copy Composer files and install PHP deps
+# 6. Copy Composer files and install PHP deps
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# 5. Copy Package files and install JS deps
+# 7. Copy Package files and install JS deps
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# 6. Copy application files
+# 8. Copy application files
 COPY . .
 
-# 7. Build frontend assets
+# 9. Build frontend assets
 RUN npm run build
 
-# 8. Run final PHP setup
+# 10. Run final PHP setup
 RUN php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache
