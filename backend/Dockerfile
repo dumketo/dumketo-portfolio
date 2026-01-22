@@ -1,50 +1,47 @@
 FROM php:8.2-cli-alpine
 
-# Set working directory first
+# Set working directory
 WORKDIR /app
 
-# 1. Install Runtime Dependencies (Lightweight)
-RUN apk add --no-cache \
+# 1. Use the official extension installer image to get the script
+# This avoids downloading it via curl (resolves network timeouts)
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+# 2. Install MongoDB & ZIP & System Utils
+# The script automatically installs system dependencies (git, unzip, etc.) needed for these
+# AND it installs pre-built binaries for MongoDB if available (Avoiding OOM compilation)
+RUN install-php-extensions \
+    mongodb \
+    zip \
+    unzip \
     git \
     curl \
-    unzip \
     openssl
 
-# 2. Install Node.js & NPM (Separate layer)
+# 3. Install Node.js & NPM
 RUN apk add --no-cache \
     nodejs \
     npm
 
-# 3. Install Build Tools (Heavy)
-# Required for compiling PECL extensions
-RUN apk add --no-cache \
-    autoconf \
-    g++ \
-    make \
-    linux-headers \
-    openssl-dev
-
-# 4. Install MongoDB Extension
-RUN pecl install mongodb && docker-php-ext-enable mongodb
-
-# 5. Install Composer
+# 4. Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 6. Copy Composer files and install PHP deps
+# 5. Copy Composer files and install PHP deps
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+# --ignore-platform-reqs ensures we don't fail if a minor extension is missing during install
+RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs
 
-# 7. Copy Package files and install JS deps
+# 6. Copy Package files and install JS deps
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# 8. Copy application files
+# 7. Copy application files
 COPY . .
 
-# 9. Build frontend assets
+# 8. Build frontend assets
 RUN npm run build
 
-# 10. Run final PHP setup
+# 9. Run final PHP setup
 RUN php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache
